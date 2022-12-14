@@ -6,29 +6,29 @@ import (
 )
 
 func falar(pessoa string) <-chan string {
-	c := make(chan string)
-	go func() {
-		for i := 0; i < 3; i++ {
-			time.Sleep(time.Second)
-			c <- fmt.Sprintf("%s falando: %d", pessoa, i)
+	c := make(chan string) // Criando um canal de string
+	go func() {            // função anônima
+		for i := 0; i < 3; i++ { // For repetindo 3 vezes
+			time.Sleep(time.Second)                       // Pause de 1 segundo
+			c <- fmt.Sprintf("%s falando: %d", pessoa, i) // Enviando uma string para o canal
 		}
-	}()
-	return c
+	}() // chamando a função anônima
+	return c // returnando o canal
 }
 
-func juntar(entrada1, entrada2 <-chan string) <-chan string {
-	c := make(chan string)
-	go func() {
-		for {
-			select {
+func juntar(entrada1, entrada2 <-chan string) <-chan string { // recebendo dois canais de string e retornando um canal de string
+	c := make(chan string) // Criando um canal de string
+	go func() {            // Função anônima
+		for { // For infinito
+			select { // Select pegando os casos do canal
 			case s := <-entrada1: // Caso chega informação no canal1
-				c <- s
+				c <- s // Pegando o resultado da entrada e atribuindo ao canal
 			case s := <-entrada2:
 				c <- s
 			}
 		}
-	}()
-	return c
+	}() // Chamando a função anônima
+	return c // Returnando o canal de string
 }
 
 func main() {
